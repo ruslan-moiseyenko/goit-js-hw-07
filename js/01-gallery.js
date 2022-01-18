@@ -35,21 +35,20 @@ function onImageClick(e) {
 
     const instance = basicLightbox.create(`
     <img src="${e.target.dataset.source}" width="800" height="600">
-    `);
-
-
+`, {
+        onShow: (instance) => {
+            closeModalByEscape(instance);
+        },
+    });
     instance.show()
-
-    if (document.querySelector('.basicLightbox')) {
-        closeModalByEscape(instance);
-    }
 
 }
 
 function closeModalByEscape(modal) {
-    document.addEventListener('keydown', e => {
+    document.addEventListener('keydown', function onEscapePress(e) {
         if (e.code === "Escape") {
             modal.close();
         }
     });
 }
+
