@@ -5,6 +5,8 @@ const galleryWrap = document.querySelector(".gallery");
 
 const galleryItemsArray = [];
 
+let instance;
+
 galleryItems.forEach(({ preview, original, description }) => {
 
     galleryItemsArray.push(document.createRange().createContextualFragment(`
@@ -33,22 +35,23 @@ function onImageClick(e) {
         return;
     }
 
-    const instance = basicLightbox.create(`
+    instance = basicLightbox.create(`
     <img src="${e.target.dataset.source}" width="800" height="600">
 `, {
-        onShow: (instance) => {
-            closeModalByEscape(instance);
+        onShow: () => {
+            document.addEventListener('keydown', closeModalByEscape);
+        },
+        onClose: () => {
+            document.removeEventListener('keydown', closeModalByEscape);
         },
     });
     instance.show()
 
 }
 
-function closeModalByEscape(modal) {
-    document.addEventListener('keydown', function onEscapePress(e) {
-        if (e.code === "Escape") {
-            modal.close();
-        }
-    });
+function closeModalByEscape(e) {
+    if (e.code === "Escape") {
+        return instance.close();
+    }
 }
 
